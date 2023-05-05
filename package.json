@@ -25,6 +25,7 @@
     "serverless-dotenv-plugin": "^2.0.1"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "google-spreadsheet": "^3.0.14",
     "node-fetch": "^2.3.0"
   }

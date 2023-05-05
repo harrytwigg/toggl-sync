@@ -4,4 +4,4 @@ services:
   timesheets:
     build: .
     env_file: .env
-    command: npm debug
+    command: npm run debug
