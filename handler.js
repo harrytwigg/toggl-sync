@@ -10,6 +10,8 @@ const TogglProvider = require('./providers/togglProvider')
 //const {stopCurrentlyRunningEntry} = require('./actions/toggl');
 
 module.exports.sync = async (event, context) => {
+	console.log('Starting sync...');
+
 	let togglClient = new TogglClient(process.env.TOGGL_API_KEY);
 	const workSpaceData = await togglClient.getWorkspaces();
 	let togglProvider = new TogglProvider(togglClient,workSpaceData[0].id);
@@ -52,15 +54,18 @@ module.exports.sync = async (event, context) => {
 
 
 module.exports.refresh = async (event, context) => {
+	console.log('Refreshing data...');
+	
     let togglClient = new TogglClient(process.env.TOGGL_API_KEY);
     let jiraClient = new JiraClient(process.env.JIRA_API_USERNAME, process.env.JIRA_API_KEY, process.env.JIRA_API_HOST);
 
 	const workSpaceData = await togglClient.getWorkspaces();
 
 	let from = new Date();
-	let until = new Date(new Date().getTime() - (15 * 60 * 1000));
+	// Look back 15 days
+	let until = new Date(new Date().getTime() - (15 * 24 * 60 * 60 * 1000));
 
-	console.log('Gathering report data...');
+	console.log('Gathering report data...', until, from);
 	let tasks = await togglClient.getReportData(workSpaceData[0].id, until, from);
     const jiraTicketRegex = /^\s*([a-zA-Z0-9]{0,4}-\d+)\s*$/;
     let summary = '';
